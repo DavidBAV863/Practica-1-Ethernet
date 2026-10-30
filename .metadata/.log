@@ -1,0 +1,130 @@
+!SESSION 2026-10-30 10:27:27.529 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=17.0.9
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 10:27:54.015
+!MESSAGE Recreating part support. No part support available.
+
+!ENTRY org.eclipse.egit.ui 2 0 2026-10-30 10:28:00.050
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\dbarraga'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 10:28:03.463
+!MESSAGE The device 'MKW41Z512xxx4' (version='1.0.0') from SDK 'SDK_2.x_FRDM-KW41Z' (version='2.2.3', build='') will be installed.
+
+!ENTRY com.crt.log 4 -1 2026-10-30 10:33:05.062
+!MESSAGE C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MKW41Z512xxx4_support\Flash
+!STACK 0
+java.lang.Exception: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MKW41Z512xxx4_support\Flash
+	at com.crt.utils.general.Reporter.log(Reporter.java:592)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5604)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:1)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2828)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider.refreshAll(SDKManifestProvider.java:5586)
+	at com.nxp.mcuxpresso.core.datamodels.SDKChipVendorDatabase.refresh(SDKChipVendorDatabase.java:745)
+	at com.nxp.mcuxpresso.core.datamodels.ui.views.SDKView.doDBRefresh(SDKView.java:2044)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.SDKImportJob.run(SDKImportJob.java:162)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MKW41Z512xxx4_support\Flash
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5602)
+	... 8 more
+
+!ENTRY com.crt.log 4 -1 2026-10-30 10:33:05.070
+!MESSAGE C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MKW41Z512xxx4_support
+!STACK 0
+java.lang.Exception: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MKW41Z512xxx4_support
+	at com.crt.utils.general.Reporter.log(Reporter.java:592)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5604)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:1)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2828)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider.refreshAll(SDKManifestProvider.java:5586)
+	at com.nxp.mcuxpresso.core.datamodels.SDKChipVendorDatabase.refresh(SDKChipVendorDatabase.java:745)
+	at com.nxp.mcuxpresso.core.datamodels.ui.views.SDKView.doDBRefresh(SDKView.java:2044)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.SDKImportJob.run(SDKImportJob.java:162)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MKW41Z512xxx4_support
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5602)
+	... 8 more
+
+!ENTRY com.crt.log 4 -1 2026-10-30 10:33:05.074
+!MESSAGE C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+!STACK 0
+java.lang.Exception: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+	at com.crt.utils.general.Reporter.log(Reporter.java:592)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5604)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:1)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2828)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider.refreshAll(SDKManifestProvider.java:5586)
+	at com.nxp.mcuxpresso.core.datamodels.SDKChipVendorDatabase.refresh(SDKChipVendorDatabase.java:745)
+	at com.nxp.mcuxpresso.core.datamodels.ui.views.SDKView.doDBRefresh(SDKView.java:2044)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.SDKImportJob.run(SDKImportJob.java:162)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5602)
+	... 8 more
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 10:33:05.382
+!MESSAGE The device 'MKW41Z512xxx4' (version='1.0.0') from SDK 'SDK_2.x_FRDM-KW41Z' (version='2.2.3', build='') will be installed.
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 10:33:05.577
+!MESSAGE The device 'MK64FN1M0xxx12' (version='1.0.0') from SDK 'SDK_2.x_FRDM-K64F' (version='2.11.0', build='epluginsite519 2022-01-17') will be installed.
+
+!ENTRY com.crt.log 4 -1 2026-10-30 10:33:06.969
+!MESSAGE C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+!STACK 0
+java.lang.Exception: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+	at com.crt.utils.general.Reporter.log(Reporter.java:592)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5604)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:1)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2828)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider.refreshAll(SDKManifestProvider.java:5586)
+	at com.nxp.mcuxpresso.core.datamodels.SDKChipVendorDatabase.refresh(SDKChipVendorDatabase.java:745)
+	at com.nxp.mcuxpresso.core.datamodels.ui.views.SDKView.doDBRefresh(SDKView.java:2044)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.RefreshJob.run(RefreshJob.java:124)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5602)
+	... 8 more
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 10:33:07.582
+!MESSAGE The device 'MKW41Z512xxx4' (version='1.0.0') from SDK 'SDK_2.x_FRDM-KW41Z' (version='2.2.3', build='') will be installed.
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 10:33:07.793
+!MESSAGE The device 'MK64FN1M0xxx12' (version='1.0.0') from SDK 'SDK_2.x_FRDM-K64F' (version='2.11.0', build='epluginsite519 2022-01-17') will be installed.
+
+!ENTRY org.eclipse.cdt.core 1 0 2026-10-30 10:39:54.224
+!MESSAGE Indexed 'frdmk64f_lwip_tcpecho_bm' (112 sources, 196 headers) in 8.06 sec: 11,392 declarations; 56,129 references; 3 unresolved inclusions; 24 syntax errors; 53 unresolved names (0.078%)
