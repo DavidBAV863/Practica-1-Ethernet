@@ -146,3 +146,153 @@ Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Int
 
 !ENTRY com.nxp.mcuxpresso.core.debug 1 0 2026-10-30 13:25:41.336
 !MESSAGE Telnet session connected on port 2333->55685 @ 127.0.0.1
+
+!ENTRY com.crt.log 4 -1 2026-10-30 14:01:19.252
+!MESSAGE C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MK64FN1M0xxx12_support\Flash
+!STACK 0
+java.lang.Exception: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MK64FN1M0xxx12_support\Flash
+	at com.crt.utils.general.Reporter.log(Reporter.java:592)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5604)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:1)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2828)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider.refreshAll(SDKManifestProvider.java:5586)
+	at com.nxp.mcuxpresso.core.datamodels.SDKChipVendorDatabase.refresh(SDKChipVendorDatabase.java:745)
+	at com.nxp.mcuxpresso.core.datamodels.ui.views.SDKView.doDBRefresh(SDKView.java:2044)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.SDKImportJob.run(SDKImportJob.java:162)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MK64FN1M0xxx12_support\Flash
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5602)
+	... 8 more
+
+!ENTRY com.crt.log 4 -1 2026-10-30 14:01:19.259
+!MESSAGE C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MK64FN1M0xxx12_support
+!STACK 0
+java.lang.Exception: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MK64FN1M0xxx12_support
+	at com.crt.utils.general.Reporter.log(Reporter.java:592)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5604)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:1)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2828)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider.refreshAll(SDKManifestProvider.java:5586)
+	at com.nxp.mcuxpresso.core.datamodels.SDKChipVendorDatabase.refresh(SDKChipVendorDatabase.java:745)
+	at com.nxp.mcuxpresso.core.datamodels.ui.views.SDKView.doDBRefresh(SDKView.java:2044)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.SDKImportJob.run(SDKImportJob.java:162)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support\MK64FN1M0xxx12_support
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5602)
+	... 8 more
+
+!ENTRY com.crt.log 4 -1 2026-10-30 14:01:19.275
+!MESSAGE C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+!STACK 0
+java.lang.Exception: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+	at com.crt.utils.general.Reporter.log(Reporter.java:592)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5604)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:1)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2828)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider.refreshAll(SDKManifestProvider.java:5586)
+	at com.nxp.mcuxpresso.core.datamodels.SDKChipVendorDatabase.refresh(SDKChipVendorDatabase.java:745)
+	at com.nxp.mcuxpresso.core.datamodels.ui.views.SDKView.doDBRefresh(SDKView.java:2044)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.SDKImportJob.run(SDKImportJob.java:162)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5602)
+	... 8 more
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 14:01:19.613
+!MESSAGE The device 'MCXN947' (version='1.0.0') from SDK 'SDK_2.x_FRDM-MCXN947' (version='26.09.00', build='epluginsite819 2026-10-01') will be installed.
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 14:01:19.770
+!MESSAGE The device 'MKW41Z512xxx4' (version='1.0.0') from SDK 'SDK_2.x_FRDM-KW41Z' (version='2.2.3', build='') will be installed.
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 14:01:19.863
+!MESSAGE The device 'MK64FN1M0xxx12' (version='1.0.0') from SDK 'SDK_2.x_FRDM-K64F' (version='2.11.0', build='epluginsite519 2022-01-17') will be installed.
+
+!ENTRY com.crt.log 4 -1 2026-10-30 14:01:21.300
+!MESSAGE C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+!STACK 0
+java.lang.Exception: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+	at com.crt.utils.general.Reporter.log(Reporter.java:592)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5604)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:1)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2828)
+	at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider.refreshAll(SDKManifestProvider.java:5586)
+	at com.nxp.mcuxpresso.core.datamodels.SDKChipVendorDatabase.refresh(SDKChipVendorDatabase.java:745)
+	at com.nxp.mcuxpresso.core.datamodels.ui.views.SDKView.doDBRefresh(SDKView.java:2044)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.RefreshJob.run(RefreshJob.java:124)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\.mcuxpressoide_packages_support
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.nxp.mcuxpresso.core.datamodels.providers.SDKManifestProvider$8.postVisitDirectory(SDKManifestProvider.java:5602)
+	... 8 more
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 14:01:21.679
+!MESSAGE The device 'MCXN947' (version='1.0.0') from SDK 'SDK_2.x_FRDM-MCXN947' (version='26.09.00', build='epluginsite819 2026-10-01') will be installed.
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 14:01:21.903
+!MESSAGE The device 'MKW41Z512xxx4' (version='1.0.0') from SDK 'SDK_2.x_FRDM-KW41Z' (version='2.2.3', build='') will be installed.
+
+!ENTRY com.nxp.mcuxpresso.core.datamodels 1 0 2026-10-30 14:01:21.996
+!MESSAGE The device 'MK64FN1M0xxx12' (version='1.0.0') from SDK 'SDK_2.x_FRDM-K64F' (version='2.11.0', build='epluginsite519 2022-01-17') will be installed.
+
+!ENTRY org.eclipse.cdt.core 1 0 2026-10-30 14:14:34.632
+!MESSAGE Indexed 'frdmmcxn947_lwip_https_client_freertos_cm33_core0' (481 sources, 862 headers) in 106 sec: 51,217 declarations; 4,360,301 references; 47 unresolved inclusions; 222 syntax errors; 6,992 unresolved names (0.16%)
+
+!ENTRY com.crt.log 1 0 2026-10-30 14:37:08.452
+!MESSAGE Trying to connect to redlink server on port 3025.
+
+!ENTRY com.nxp.mcuxpresso.core.debug.support.linkserver 1 0 2026-10-30 14:37:10.473
+!MESSAGE RedlinkServer telnet session connected on port 3025->59659 @ 127.0.0.1
+
+!ENTRY org.eclipse.cdt.core 1 0 2026-10-30 14:44:13.249
+!MESSAGE Indexed 'frdmmcxn947_lwip_dhcp_bm_cm33_core0' (117 sources, 277 headers) in 9.42 sec: 20,493 declarations; 85,563 references; 0 unresolved inclusions; 0 syntax errors; 24 unresolved names (0.023%)
+
+!ENTRY org.eclipse.cdt.dsf.gdb 4 4 2026-10-30 14:51:11.845
+!MESSAGE NullPointerException while trying to calculated source lookup path. This can be ignored if it occurs while terminating a debug session. See Bug 500988.
+!STACK 0
+java.lang.NullPointerException: Cannot read the array length because "containers" is null
+	at org.eclipse.cdt.dsf.gdb.launching.GdbSourceLookupDirector.collectSubstitutionsPaths(GdbSourceLookupDirector.java:102)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbSourceLookupDirector.collectSubstitutionsPaths(GdbSourceLookupDirector.java:146)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbSourceLookupDirector.getSubstitutionsPaths(GdbSourceLookupDirector.java:72)
+	at org.eclipse.cdt.dsf.gdb.service.GDBSourceLookup.getSubstitutionsPaths(GDBSourceLookup.java:124)
+	at org.eclipse.cdt.dsf.gdb.service.GDBSourceLookup.sourceContainersChanged(GDBSourceLookup.java:139)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbSourceLookupParticipant.sourceContainersChangedOnDispatchThread(GdbSourceLookupParticipant.java:120)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbSourceLookupParticipant$1.run(GdbSourceLookupParticipant.java:85)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+!ENTRY com.crt.log 1 0 2026-10-30 14:51:16.203
+!MESSAGE Starting GDB server [ C:/nxp/LinkServer_25.6.131/binaries/crt_emu_cm_redlink, --server, :10989, -msg-port=60503, -g, -mi, -2, -pMCXN947, -vendor=NXP, --bootromstall, 0x50000040, --reset=, -ProbeHandle=1, -CoreIndex=0, -cache=disable, --flash-hashing, --flash-driver=, -x, C:/Users/dbarraga/OneDrive - Intel Corporation/Documents/Redes/Practica_1/frdmmcxn947_lwip_dhcp_bm_cm33_core0/Debug, --flash-dir, C:/nxp/LinkServer_25.6.131/binaries/Flash, --flash-dir, C:/Users/dbarraga/OneDrive - Intel Corporation/Documents/Redes/Practica_1/.mcuxpressoide_packages_support/MCXN947_support/Flash, --telnet, 3330, --romstalldelay, 600 ]
+
+!ENTRY com.nxp.mcuxpresso.core.debug 1 0 2026-10-30 14:51:18.796
+!MESSAGE Telnet session connected on port 3330->60517 @ 127.0.0.1

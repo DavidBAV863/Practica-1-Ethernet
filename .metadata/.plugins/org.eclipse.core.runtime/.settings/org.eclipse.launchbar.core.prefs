@@ -1,7 +1,9 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmk64f_lwip_tcpecho_bm JLink Debug
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmk64f_lwip_tcpecho_bm JLink Debug,org.eclipse.launchbar.core.descriptorType.default\:frdmmcxn947_lwip_dhcp_bm_cm33_core0 LinkServer Debug
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmk64f_lwip_tcpecho_bm\ JLink\ Debug/activeLaunchMode=debug
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:frdmk64f_lwip_tcpecho_bm\ JLink\ Debug/activeLaunchTarget=null\:---
+org.eclipse.launchbar.core.descriptorType.default\:frdmmcxn947_lwip_dhcp_bm_cm33_core0\ LinkServer\ Debug/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:frdmmcxn947_lwip_https_client_freertos_cm33_core0\ LinkServer\ Debug/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local

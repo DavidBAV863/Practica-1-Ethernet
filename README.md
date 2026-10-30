@@ -436,4 +436,122 @@ K64 recibio: hola amigos!!!!!!!!!!
 
 Durante la prueba se observó que PuTTY envía la línea y el `CR LF` en segmentos TCP distintos, lo que generaba respuestas duplicadas y vacías. `tcp_server_recv()` ahora recorta `\r\n` del final, ignora segmentos vacíos y termina cada respuesta con `\r\n`.
 
+---
+
+## 9. Cliente TCP en la FRDM-MCXN947
+
+Proyecto base: `frdmmcxn947_lwip_dhcp_bm_cm33_core0` (lwIP *bare-metal*, API **raw**, igual que la K64). Se reutiliza la inicialización de red, se quita DHCP y se agrega un cliente TCP que lee lo que el usuario escribe en la consola serie y lo envía al servidor de la K64.
+
+> Inicialmente se intentó con `frdmmcxn947_lwip_https_client_freertos_cm33_core0` (FreeRTOS + sockets BSD + mbedTLS), pero el proyecto era demasiado pesado; se descartó en favor del ejemplo DHCP bare-metal, que es mucho más ligero y comparte el mismo modelo de programación que el servidor.
+
+### 9.1 Topología
+
+```
+ PC (consolas serie por USB)
+  ├── USB ──► FRDM-K64F      10.10.10.102  ── Servidor TCP, puerto 7
+  └── USB ──► FRDM-MCXN947   10.10.10.101  ── Cliente TCP
+                   │                 │
+                   └── cable Ethernet ┘   (directo, o ambas a un switch junto con la PC en 10.10.10.100)
+```
+
+Ambos PHY (KSZ8081 en la K64, LAN8741 en la MCX) soportan Auto-MDIX, por lo que un cable directo entre tarjetas funciona.
+
+### 9.2 Archivos modificados / nuevos
+
+| Archivo | Cambio |
+|---------|--------|
+| `source/tcp_client.h` | Nuevo. `tcp_client_init(ip, puerto)` y `tcp_client_poll_console()`. |
+| `source/tcp_client.c` | Nuevo. Cliente con API raw: `tcp_new_ip_type` → `tcp_connect` → callbacks `connected` / `recv` / `err`; lectura **no bloqueante** de la UART por *polling* del LPUART4; reconexión automática con `sys_timeout`. |
+| `source/lwip_dhcp_bm.c` | Se quita `dhcp_start()` y `print_dhcp_state()`. IP estática `10.10.10.101/24`, gateway `10.10.10.100`. Se llama `tcp_client_init()` y, en el `while(1)`, `tcp_client_poll_console()`. |
+
+### 9.3 Por qué la consola se lee por *polling* y no con `GETCHAR()`
+
+En *bare-metal* el `while(1)` de `main()` es el único hilo: si se bloquea en `GETCHAR()` esperando una tecla, `ethernetif_input()` y `sys_check_timeouts()` dejan de ejecutarse y lwIP no procesa tramas ni temporizadores (el ARP, los reintentos de TCP y la respuesta del servidor se congelan). Por eso `tcp_client_poll_console()` consulta directamente el registro de estado del LPUART4 y solo lee un byte si hay uno disponible:
+
+```c
+uint32_t flags = LPUART_GetStatusFlags(CONSOLE_UART);
+if (!(flags & kLPUART_RxDataRegFullFlag)) return;   /* nada que leer, regresar al loop */
+uint8_t c = LPUART_ReadByte(CONSOLE_UART);
+```
+
+La línea se acumula en `tx_line[]`; al recibir Enter se envía con `tcp_write()` + `tcp_output()`.
+
+### 9.4 Comparación servidor (K64) vs. cliente (MCX), ambos con API raw
+
+| Paso | K64 — servidor (`tcp_server.c`) | MCXN947 — cliente (`tcp_client.c`) |
+|------|---------------------------------|------------------------------------|
+| Crear PCB | `tcp_new_ip_type(IPADDR_TYPE_ANY)` | `tcp_new_ip_type(IPADDR_TYPE_V4)` |
+| Dirección | `tcp_bind(pcb, IP_ANY_TYPE, 7)` | `IP4_ADDR(&server_ip, 10,10,10,102)` |
+| Inicio | `tcp_listen()` + `tcp_accept(cb)` | `tcp_connect(pcb, &server_ip, 7, cb_connected)` |
+| Recibir | callback `tcp_recv()` | callback `tcp_recv()` |
+| Enviar | `tcp_write()` + `tcp_output()` | `tcp_write()` + `tcp_output()` (Nagle deshabilitado) |
+| Error / cierre | `tcp_err()`, `tcp_close()` | `tcp_err()` → `sys_timeout(2000, reconectar)` |
+| Entrada de usuario | — | *polling* del LPUART4 en el `while(1)` |
+
+### 9.5 Flujo del cliente
+
+```
+main()
+  ├─ lwip_init()
+  ├─ netif_add(IP 10.10.10.101, mask /24, gw 10.10.10.100)
+  ├─ ethernetif_wait_linkup()
+  ├─ tcp_client_init(10.10.10.102, 7) ──► tcp_connect()
+  └─ while(1)
+       ├─ ethernetif_input()
+       ├─ sys_check_timeouts()
+       └─ tcp_client_poll_console()  ← eco, backspace; Enter → send_line()
+
+callbacks (lwIP los invoca desde ethernetif_input / sys_check_timeouts)
+  ├─ tcp_client_connected()  → "Conectado a 10.10.10.102:7"
+  ├─ tcp_client_recv()       → "  <- K64 recibio: ..."  |  p == NULL → cierre + reconexión
+  └─ tcp_client_error()      → PCB ya liberado por lwIP → programa reconexión en 2 s
+```
+
+### 9.6 Prueba
+
+1. Flashear la K64 (servidor) y la MCXN947 (cliente). Conectar el cable Ethernet entre ambas.
+2. Abrir dos consolas serie (115200 8N1): COM de la K64 y COM de la MCX.
+3. En la consola de la MCX se verá:
+
+```
+************************************************
+ FRDM-MCXN947 TCP Client
+************************************************
+ IPv4 Address     : 10.10.10.101
+ IPv4 Subnet mask : 255.255.255.0
+ IPv4 Gateway     : 10.10.10.100
+ MAC Address      : xx:xx:xx:xx:xx:xx
+ Servidor TCP     : 10.10.10.102:7
+************************************************
+
+Conectando a 10.10.10.102:7 ...
+Conectado a 10.10.10.102:7.
+Escribe un mensaje y presiona Enter para enviarlo.
+>   <- Conectado al servidor TCP de la FRDM-K64F
+> hola desde la MCX
+  <- K64 recibio: hola desde la MCX
+>
+```
+
+4. En la consola de la K64:
+
+```
+ Cliente conectado desde 10.10.10.101:49153
+ [10.10.10.101:49153] -> hola desde la MCX
+```
+
+Si la K64 no está encendida o rechaza la conexión, el cliente imprime `Error TCP: -13` (`ERR_RST`) o `-15` (`ERR_ABRT`) y reintenta cada 2 s hasta conectar. Si se escribe sin conexión, el mensaje se descarta con aviso.
+
+### 9.7 Parámetros configurables
+
+| Macro | Archivo | Valor por defecto |
+|-------|---------|-------------------|
+| `configIP_ADDR0..3` | `lwip_dhcp_bm.c` | `10.10.10.101` |
+| `configGW_ADDR0..3` | `lwip_dhcp_bm.c` | `10.10.10.100` |
+| `configSERVER_ADDR0..3` | `lwip_dhcp_bm.c` | `10.10.10.102` |
+| `configSERVER_PORT` | `lwip_dhcp_bm.c` | `7` |
+| `RECONNECT_DELAY_MS` | `tcp_client.c` | `2000` |
+| `TX_LINE_MAX` | `tcp_client.c` | `128` |
+| `CONSOLE_UART` | `tcp_client.c` | `BOARD_DEBUG_UART_BASEADDR` (LPUART4) |
+
 

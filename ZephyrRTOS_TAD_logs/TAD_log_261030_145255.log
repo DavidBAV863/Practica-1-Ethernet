@@ -1,0 +1,12 @@
+"Task Aware Debugger for GDB" version 25.6.0 (202506250844)
+Copyright 2016-2025 NXP
+==================================
+14:51:07.584 INFO: [ZephyrRTOS] .config file could not be read [C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\frdmmcxn947_lwip_dhcp_bm_cm33_core0\Debug\.config (The system cannot find the file specified)]
+14:51:07.585 INFO: [TadModel] DSF session ID 6 has started.
+14:51:19.580 INFO: [TadState] TAD state changed: DEBUG_STARTED -> DEBUG_INIT_0 (RESUMED, USER_REQUEST)
+14:51:19.667 INFO: [TadState] TAD state changed: DEBUG_INIT_0 -> DEBUG_INIT_1 (SUSPENDED, SIGNAL)
+14:51:25.254 INFO: [TadState] TAD state changed: DEBUG_INIT_1 -> DEBUG_SUSPENDED (RESUMED, USER_REQUEST)
+14:51:25.445 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_SUSPENDED (SUSPENDED, BREAKPOINT)
+14:51:34.569 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_RESUMED (RESUMED, USER_REQUEST)
+14:52:53.736 INFO: [TadState] TAD state changed: DEBUG_RESUMED -> READY (SUSPENDED, SIGNAL)
+14:52:55.945 INFO: [TadModel] DSF session ID 6 has ended.
