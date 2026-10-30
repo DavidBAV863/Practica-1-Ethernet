@@ -1,0 +1,3 @@
+#List of "project<build_config><tool>=state" or "project=state" entries associated to "-ffreestanding"-related markers that are ignored in current workspace.
+#Fri Oct 30 13:00:48 CST 2026
+frdmk64f_lwip_tcpecho_bm=ignoreUIWarning

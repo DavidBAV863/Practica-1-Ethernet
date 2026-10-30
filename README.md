@@ -41,11 +41,13 @@ ethernetif_config_t enet_config = {
 
 También en `source/lwip_tcpecho_bm.c`, con las macros `configIP_ADDRx`, `configNET_MASKx` y `configGW_ADDRx`:
 
-| Parámetro        | Macros               | Valor           |
-|------------------|----------------------|-----------------|
-| IP de la tarjeta | `configIP_ADDR0..3`  | `192.168.0.102` |
-| Máscara de red   | `configNET_MASK0..3` | `255.255.255.0` |
-| Gateway          | `configGW_ADDR0..3`  | `192.168.0.100` |
+| Parámetro        | Macros               | Valor original  | Valor actual   |
+|------------------|----------------------|-----------------|----------------|
+| IP de la tarjeta | `configIP_ADDR0..3`  | `192.168.0.102` | `10.10.10.102` |
+| Máscara de red   | `configNET_MASK0..3` | `255.255.255.0` | `255.255.255.0`|
+| Gateway          | `configGW_ADDR0..3`  | `192.168.0.100` | `10.10.10.100` |
+
+> Se cambió la subred a `10.10.10.x` porque la VPN corporativa (GlobalProtect) inyecta una ruta `192.168.0.0/24` con métrica 0 que captura el tráfico hacia la K64 y lo manda por el túnel; con `10.10.10.0/24` el tráfico sale por el cable Ethernet.
 
 La IP es **estática** (no se usa DHCP). Se construye y se asigna a la interfaz en `main()`:
 
@@ -248,7 +250,7 @@ tcpclient_raw_init(void)
 {
   ip4_addr_t server_ip;
 
-  IP4_ADDR(&server_ip, 192, 168, 0, 100);         /* IP del servidor (p. ej. la PC) */
+  IP4_ADDR(&server_ip, 10, 10, 10, 100);          /* IP del servidor (p. ej. la PC) */
 
   client_pcb = tcp_new_ip_type(IPADDR_TYPE_ANY);  /* socket() */
   if (client_pcb != NULL) {
@@ -271,4 +273,167 @@ Como la API raw es asíncrona, pueden coexistir: llamar a `tcpecho_raw_init()` (
 ### 6.4 Alternativa con sockets BSD
 
 Para usar `socket()/bind()/listen()/accept()/connect()` reales hay que compilar con `USE_RTOS` (proyecto `lwip_tcpecho_freertos`), lo que en `lwipopts.h` activa `NO_SYS = 0` y `LWIP_SOCKET = 1`. La API de sockets requiere un sistema operativo; el proyecto actual (*bare-metal*) solo soporta la API raw.
+
+---
+
+## 7. Modificación realizada: la K64 como servidor TCP
+
+Se reemplazó la aplicación de ejemplo `tcpecho_raw` por un servidor propio en `source/`:
+
+| Archivo | Cambio |
+|---------|--------|
+| `source/tcp_server.h` | Nuevo. Declara `tcp_server_init()` y el puerto `TCP_SERVER_PORT` (7). |
+| `source/tcp_server.c` | Nuevo. Implementa el servidor con la API raw de lwIP. |
+| `source/lwip_tcpecho_bm.c` | Incluye `tcp_server.h` en lugar de `tcpecho_raw.h`, imprime la MAC y llama a `tcp_server_init()` tras configurar la red. |
+
+### Funcionamiento de `tcp_server.c`
+
+```
+tcp_server_init()
+  ├─ tcp_new_ip_type()  → crea el PCB (socket)
+  ├─ tcp_bind(…, 7)     → puerto 7 en cualquier IP local
+  ├─ tcp_listen()       → modo escucha
+  └─ tcp_accept(tcp_server_accept)
+
+tcp_server_accept()  ← un cliente se conecta
+  ├─ registra tcp_recv(tcp_server_recv) y tcp_err(tcp_server_error)
+  └─ envía "Conectado al servidor TCP de la FRDM-K64F"
+
+tcp_server_recv()    ← llegan datos
+  ├─ copia el pbuf a rx_buffer y lo imprime por consola (PRINTF)
+  ├─ responde "K64 recibio: <datos>" con tcp_write() + tcp_output()
+  ├─ tcp_recved() para liberar ventana de recepción
+  └─ si p == NULL el cliente cerró → tcp_close()
+```
+
+### Prueba desde la PC
+
+1. Asignar IP estática a la PC en el adaptador Ethernet conectado a la K64 (PowerShell como administrador; ajustar el nombre del adaptador con `Get-NetAdapter`):
+
+```powershell
+New-NetIPAddress -InterfaceAlias "Ethernet 5" -IPAddress 10.10.10.100 -PrefixLength 24
+```
+
+2. Verificar que el tráfico sale por el cable y que la K64 responde:
+
+```powershell
+Find-NetRoute -RemoteIPAddress 10.10.10.102 | Select-Object -First 1 -ExpandProperty IPAddress   # debe mostrar 10.10.10.100
+ping 10.10.10.102
+```
+
+3. Abrir la consola serie del OpenSDA (115200 8N1) para ver los mensajes de la tarjeta.
+4. Conectarse como cliente:
+
+```powershell
+# PuTTY: Connection type = Raw, Host = 10.10.10.102, Port = 7
+
+# Windows (telnet)
+telnet 10.10.10.102 7
+
+# Linux / macOS
+nc 10.10.10.102 7
+```
+
+5. Todo lo que se escriba en el cliente se mostrará en la consola de la K64 y se recibirá de vuelta con el prefijo `K64 recibio:`.
+
+#### Problemas encontrados durante la prueba
+
+| Síntoma | Causa | Solución |
+|---------|-------|----------|
+| PuTTY: *Network error: connection timeout* y `ping` sin respuesta. | La PC tenía la misma IP que la K64 (`192.168.0.102`). | Asignar a la PC la IP del gateway (`.100`). |
+| Sigue sin responder; `Find-NetRoute` devuelve la IP de la VPN (`10.124.x.x`). | GlobalProtect inyecta `192.168.0.0/24` con métrica 0 y se lleva el tráfico por el túnel. | Cambiar la subred de la K64 a `10.10.10.0/24` (ver sección 8). |
+| Tras cambiar a `10.10.10.x`, `Get-NetIPAddress` muestra `AddressState = Duplicate`. | Se asignó a la PC `.102` (la IP de la K64) en vez de `.100`. Windows detectó el conflicto por ARP y no instaló la ruta. | Corregir a `10.10.10.100`. Regla: **K64 = .102, PC = .100**. |
+| `Find-NetRoute` sigue devolviendo la IP de la VPN aunque la subred sea nueva. | GlobalProtect copia **cualquier** subred local de la PC al túnel con métrica 0 (política "sin acceso a red local"). | Ruta `/32` hacia la K64 por el cable o desconectar la VPN (ver sección 8). |
+
+Para cambiar el puerto basta con definir `TCP_SERVER_PORT` antes de incluir `tcp_server.h` o editar el valor por defecto en el header.
+
+---
+
+## 8. Cambios para poder probar el ejemplo con la VPN corporativa (GlobalProtect)
+
+### 8.1 Diagnóstico
+
+Con la K64 corriendo y el cable conectado, `ping` y PuTTY daban *timeout*. Los comandos de diagnóstico mostraron:
+
+```powershell
+PS> Find-NetRoute -RemoteIPAddress 192.168.0.102 | Select-Object -First 1 -ExpandProperty IPAddress
+10.124.82.95          # <- IP del adaptador de la VPN, no la del cable
+
+PS> Get-NetRoute -AddressFamily IPv4 | Where-Object DestinationPrefix -like '192.168.0.*'
+DestinationPrefix NextHop InterfaceAlias RouteMetric InterfaceMetric
+192.168.0.0/24    0.0.0.0 Ethernet 2 (PANGP VPN)    0        1     # <- gana
+192.168.0.0/24    0.0.0.0 Ethernet 5 (cable)      256       35
+```
+
+GlobalProtect (adaptador *PANGP Virtual Ethernet Adapter*) inyecta una copia de la subred local con métrica 0, así que todo el tráfico hacia la K64 se iba por el túnel VPN y nunca llegaba al cable. Al cambiar la K64 a `10.10.10.x` el comportamiento se repitió: la VPN volvió a copiar `10.10.10.0/24`. Es decir, **no depende de la subred elegida**.
+
+### 8.2 Cambio en el firmware (`source/lwip_tcpecho_bm.c`)
+
+Se movió la K64 fuera de `192.168.0.x` para evitar choques con redes domésticas/corporativas típicas:
+
+```c
+/* IP address configuration. Subred 10.10.10.x para no chocar con rutas de VPN (192.168.0.0/24). */
+#define configIP_ADDR0 10
+#define configIP_ADDR1 10
+#define configIP_ADDR2 10
+#define configIP_ADDR3 102
+
+/* Gateway address configuration (IP de la PC). */
+#define configGW_ADDR0 10
+#define configGW_ADDR1 10
+#define configGW_ADDR2 10
+#define configGW_ADDR3 100
+```
+
+Resultado: **K64 = `10.10.10.102/24`**, **PC = `10.10.10.100/24`**.
+
+### 8.3 Cambio en la PC: IP estática + ruta que esquiva la VPN
+
+PowerShell **como administrador** (ajustar `"Ethernet 5"` al nombre real del adaptador, ver `Get-NetAdapter`):
+
+```powershell
+# 1. IP estática en el adaptador conectado a la K64
+New-NetIPAddress -InterfaceAlias "Ethernet 5" -IPAddress 10.10.10.100 -PrefixLength 24
+
+# 2. Ruta /32 hacia la K64 por el cable. Un /32 siempre gana sobre el /24 que inyecta la VPN.
+New-NetRoute -DestinationPrefix 10.10.10.102/32 -InterfaceAlias "Ethernet 5" -NextHop 0.0.0.0 -RouteMetric 0
+
+# 3. Limpiar ARP viejo y verificar
+arp -d 10.10.10.102
+Find-NetRoute -RemoteIPAddress 10.10.10.102 | Select-Object -First 1 -ExpandProperty IPAddress   # debe decir 10.10.10.100
+ping 10.10.10.102
+```
+
+Alternativa sin tocar rutas: desconectar GlobalProtect (icono en la bandeja → *Disconnect*) mientras dura la prueba.
+
+> La ruta `/32` no es persistente; se pierde al reiniciar o al reconectar la VPN. Para hacerla permanente agregar `-PolicyStore PersistentStore` al `New-NetRoute`, aunque GlobalProtect puede eliminarla según la política corporativa.
+
+### 8.4 Resultado
+
+Consola serie de la K64 (COM6, 115200 8N1):
+
+```
+ IPv4 Address     : 10.10.10.102
+ IPv4 Subnet mask : 255.255.255.0
+ IPv4 Gateway     : 10.10.10.100
+ MAC Address      : 02:12:13:10:15:11
+************************************************
+ Servidor TCP escuchando en el puerto 7
+ Cliente conectado desde 10.10.10.100:58255
+ [10.10.10.100:58255] -> hola
+ [10.10.10.100:58255] -> hola amigos!!!!!!!!!!
+```
+
+PuTTY (Raw, `10.10.10.102:7`):
+
+```
+Conectado al servidor TCP de la FRDM-K64F
+K64 recibio: hola
+K64 recibio: hola amigos!!!!!!!!!!
+```
+
+### 8.5 Ajustes posteriores en `tcp_server.c`
+
+Durante la prueba se observó que PuTTY envía la línea y el `CR LF` en segmentos TCP distintos, lo que generaba respuestas duplicadas y vacías. `tcp_server_recv()` ahora recorta `\r\n` del final, ignora segmentos vacíos y termina cada respuesta con `\r\n`.
+
 

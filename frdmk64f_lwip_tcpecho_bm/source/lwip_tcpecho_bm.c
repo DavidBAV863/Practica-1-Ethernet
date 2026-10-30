@@ -14,7 +14,7 @@
 
 #if LWIP_TCP
 
-#include "tcpecho_raw.h"
+#include "tcp_server.h"
 #include "lwip/timeouts.h"
 #include "lwip/init.h"
 #include "netif/ethernet.h"
@@ -34,15 +34,15 @@
 
 /* @TEST_ANCHOR */
 
-/* IP address configuration. */
+/* IP address configuration. Subred 10.10.10.x para no chocar con rutas de VPN (192.168.0.0/24). */
 #ifndef configIP_ADDR0
-#define configIP_ADDR0 192
+#define configIP_ADDR0 10
 #endif
 #ifndef configIP_ADDR1
-#define configIP_ADDR1 168
+#define configIP_ADDR1 10
 #endif
 #ifndef configIP_ADDR2
-#define configIP_ADDR2 0
+#define configIP_ADDR2 10
 #endif
 #ifndef configIP_ADDR3
 #define configIP_ADDR3 102
@@ -62,15 +62,15 @@
 #define configNET_MASK3 0
 #endif
 
-/* Gateway address configuration. */
+/* Gateway address configuration (IP de la PC). */
 #ifndef configGW_ADDR0
-#define configGW_ADDR0 192
+#define configGW_ADDR0 10
 #endif
 #ifndef configGW_ADDR1
-#define configGW_ADDR1 168
+#define configGW_ADDR1 10
 #endif
 #ifndef configGW_ADDR2
-#define configGW_ADDR2 0
+#define configGW_ADDR2 10
 #endif
 #ifndef configGW_ADDR3
 #define configGW_ADDR3 100
@@ -157,10 +157,8 @@ int main(void)
     netif_set_default(&netif);
     netif_set_up(&netif);
 
-    tcpecho_raw_init();
-
     PRINTF("\r\n************************************************\r\n");
-    PRINTF(" TCP Echo example\r\n");
+    PRINTF(" FRDM-K64F TCP Server\r\n");
     PRINTF("************************************************\r\n");
     PRINTF(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_ipaddr)[0], ((u8_t *)&netif_ipaddr)[1],
            ((u8_t *)&netif_ipaddr)[2], ((u8_t *)&netif_ipaddr)[3]);
@@ -168,7 +166,16 @@ int main(void)
            ((u8_t *)&netif_netmask)[2], ((u8_t *)&netif_netmask)[3]);
     PRINTF(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_gw)[0], ((u8_t *)&netif_gw)[1],
            ((u8_t *)&netif_gw)[2], ((u8_t *)&netif_gw)[3]);
-    PRINTF("************************************************\r\n");
+    /* El PRINTF del debug console no respeta el relleno con cero de %02X. */
+    PRINTF(" MAC Address      : ");
+    for (int i = 0; i < 6; i++)
+    {
+        PRINTF("%c%c%c", "0123456789ABCDEF"[enet_config.macAddress[i] >> 4],
+               "0123456789ABCDEF"[enet_config.macAddress[i] & 0x0F], (i < 5) ? ':' : '\r');
+    }
+    PRINTF("\n************************************************\r\n");
+
+    tcp_server_init();
 
     while (1)
     {

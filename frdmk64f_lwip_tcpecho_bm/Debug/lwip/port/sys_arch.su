@@ -1,0 +1,12 @@
+C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\frdmk64f_lwip_tcpecho_bm\CMSIS/core_cm4.h:1809:22:__NVIC_SetPriority	16	static
+C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\frdmk64f_lwip_tcpecho_bm\CMSIS/core_cm4.h:2017:26:SysTick_Config	16	static
+C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\frdmk64f_lwip_tcpecho_bm\drivers/fsl_common_arm.h:579:24:DisableGlobalIRQ	16	static
+C:\Users\dbarraga\OneDrive - Intel Corporation\Documents\Redes\Practica_1\frdmk64f_lwip_tcpecho_bm\drivers/fsl_common_arm.h:606:20:EnableGlobalIRQ	24	static
+../lwip/port/sys_arch.c:70:6:sys_assert	16	static
+../lwip/port/sys_arch.c:89:7:lwip_rand	4	static
+../lwip/port/sys_arch.c:705:6:time_isr	4	static
+../lwip/port/sys_arch.c:713:6:time_init	32	static
+../lwip/port/sys_arch.c:734:7:sys_now	4	static
+../lwip/port/sys_arch.c:758:12:sys_arch_protect	16	static
+../lwip/port/sys_arch.c:778:6:sys_arch_unprotect	16	static
+../lwip/port/sys_arch.c:783:6:sys_check_core_locking	16	static

@@ -128,3 +128,21 @@ Caused by: java.nio.file.AccessDeniedException: C:\Users\dbarraga\OneDrive - Int
 
 !ENTRY org.eclipse.cdt.core 1 0 2026-10-30 10:39:54.224
 !MESSAGE Indexed 'frdmk64f_lwip_tcpecho_bm' (112 sources, 196 headers) in 8.06 sec: 11,392 declarations; 56,129 references; 3 unresolved inclusions; 24 syntax errors; 53 unresolved names (0.078%)
+
+!ENTRY com.crt.log 1 0 2026-10-30 13:02:28.546
+!MESSAGE Trying to connect to redlink server on port 3025.
+
+!ENTRY com.nxp.mcuxpresso.core.debug.support.linkserver 1 0 2026-10-30 13:02:28.555
+!MESSAGE RedlinkServer telnet session connected on port 3025->56056 @ 127.0.0.1
+
+!ENTRY com.crt.utils 1 0 2026-10-30 13:02:41.644
+!MESSAGE Connected to 127.0.0.1 on port 2332.
+
+!ENTRY com.nxp.mcuxpresso.core.debug 1 0 2026-10-30 13:02:42.194
+!MESSAGE Telnet session connected on port 2333->56323 @ 127.0.0.1
+
+!ENTRY com.crt.utils 1 0 2026-10-30 13:25:40.834
+!MESSAGE Connected to 127.0.0.1 on port 2332.
+
+!ENTRY com.nxp.mcuxpresso.core.debug 1 0 2026-10-30 13:25:41.336
+!MESSAGE Telnet session connected on port 2333->55685 @ 127.0.0.1

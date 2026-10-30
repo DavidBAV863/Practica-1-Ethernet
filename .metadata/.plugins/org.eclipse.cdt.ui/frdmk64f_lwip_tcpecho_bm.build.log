@@ -1,0 +1,11 @@
+13:25:36 **** Incremental Build of configuration Debug for project frdmk64f_lwip_tcpecho_bm ****
+make -r -j8 all 
+make[1]: Nothing to be done for 'main-build'.
+Performing post-build steps
+arm-none-eabi-size "frdmk64f_lwip_tcpecho_bm.axf"; # arm-none-eabi-objcopy -v -O binary "frdmk64f_lwip_tcpecho_bm.axf" "frdmk64f_lwip_tcpecho_bm.bin" ; # checksum -p MK64FN1M0xxx12 -d "frdmk64f_lwip_tcpecho_bm.bin";
+   text	   data	    bss	    dec	    hex	filename
+  86360	     56	  64560	 150976	  24dc0	frdmk64f_lwip_tcpecho_bm.axf
+ 
+
+13:25:37 Build Finished. 0 errors, 0 warnings. (took 882ms)
+

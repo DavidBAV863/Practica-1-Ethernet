@@ -1,0 +1,5 @@
+../source/tcp_server.c:24:13:tcp_server_close	16	static
+../source/tcp_server.c:33:14:tcp_server_recv	32	static
+../source/tcp_server.c:74:13:tcp_server_error	16	static
+../source/tcp_server.c:81:14:tcp_server_accept	24	static
+../source/tcp_server.c:105:7:tcp_server_init	16	static
