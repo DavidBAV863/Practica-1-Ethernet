@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;frdmmcxn947_lwip_https_client_freertos_cm33_core0&apos;" deleteContents="true" description="Delete resource &apos;frdmmcxn947_lwip_https_client_freertos_cm33_core0&apos;" element1="/frdmmcxn947_lwip_https_client_freertos_cm33_core0" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1793392986817"/>
+</session>

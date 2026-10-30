@@ -436,4 +436,108 @@ K64 recibio: hola amigos!!!!!!!!!!
 
 Durante la prueba se observó que PuTTY envía la línea y el `CR LF` en segmentos TCP distintos, lo que generaba respuestas duplicadas y vacías. `tcp_server_recv()` ahora recorta `\r\n` del final, ignora segmentos vacíos y termina cada respuesta con `\r\n`.
 
+---
+
+## 9. Servidor de Ruleta Rusa (K64 + 3 clientes MCXN947 vía switch)
+
+### 9.1 Topología
+
+```
+                 ┌──────────────┐
+  K64 (servidor) │              │  MCXN947 #1  10.10.10.11   (Jugador 1)
+  10.10.10.102:7 │    SWITCH    │  MCXN947 #2  10.10.10.12   (Jugador 2)
+                 │              │  MCXN947 #3  10.10.10.13   (Jugador 3)
+  PC 10.10.10.100│              │
+                 └──────────────┘
+```
+
+Todos en `10.10.10.0/24`. El número de jugador lo asigna el servidor por **orden de conexión** (slot libre más bajo), no por IP. La PC es opcional (consola serie y/o cliente de prueba con PuTTY).
+
+### 9.2 Reglas implementadas
+
+1. El servidor espera a que se conecten `GAME_NUM_PLAYERS` (3) clientes y entonces inicia la partida.
+2. Se turna entre los jugadores vivos. En su turno, el cliente envía el **número de balas** (`min..6`). El servidor "gira el tambor" y responde:
+   - `1` → le tocó bala, queda **eliminado**.
+   - `0` → sobrevivió.
+   
+   Probabilidad de bala = `balas / 6`.
+3. Tras cada disparo (y cada desconexión) se envía a **todos** los clientes `>> Jugadores vivos: X de 3`.
+4. Cada `GAME_ROUNDS_PER_LEVEL` (2) rondas el mínimo de balas sube en 1: rondas 1-2 → mín 1, rondas 3-4 → mín 2, 5-6 → mín 3, … hasta 6. Una ronda = una vuelta completa por los jugadores vivos.
+5. Gana el último jugador vivo. El servidor anuncia al ganador y reinicia la partida en `GAME_RESTART_DELAY_MS` (10 s) con los clientes que sigan conectados (mínimo 2).
+
+### 9.3 Archivos
+
+| Archivo | Rol |
+|---------|-----|
+| `source/roulette_game.h/.c` | **Lógica del juego**, sin dependencias de red. Expone `game_init()`, `game_player_joined()`, `game_player_left()`, `game_player_input()`; envía texto mediante un callback `game_send_fn`. |
+| `source/tcp_server.c` | **Red** (API raw). Mantiene `player_pcb[GAME_NUM_PLAYERS]`: cada conexión aceptada ocupa un slot; lo recibido se pasa al juego; `send_to_player()` es el callback que el juego usa para responder. Rechaza conexiones si no hay slots. |
+| `source/tcp_server.h` | Puerto `TCP_SERVER_PORT` (7). |
+
+Separar juego y red permite cambiar reglas sin tocar lwIP y viceversa.
+
+### 9.4 Protocolo (texto, líneas terminadas en `\r\n`)
+
+**Cliente → Servidor**: una línea con el número de balas, p. ej. `3\r\n`. Cualquier otra cosa fuera de turno o fuera de rango recibe un mensaje de error y no cuenta.
+
+**Servidor → Cliente** (los clientes solo necesitan imprimir todo lo que reciben; el `1`/`0` va en su propia línea para poder parsearlo):
+
+| Momento | Mensaje |
+|---------|---------|
+| Conexión | `Bienvenido a la Ruleta Rusa. Eres el Jugador N.` / `>> Jugadores conectados: n de 3` |
+| Inicio | `===== INICIA LA RULETA RUSA: 3 jugadores =====` |
+| Turno propio | `== TU TURNO (ronda R) == Minimo M bala(s). Envia el numero de balas (M-6):` |
+| Turno ajeno | `-- Turno del Jugador N (ronda R, minimo M bala(s)). Esperando...` |
+| Resultado propio | `1` + `BANG! Te toco bala (b/6). Quedas eliminado.`  o  `0` + `click... Sobreviviste (b/6).` |
+| Resultado ajeno | `** Jugador N jugo con b bala(s): BANG, eliminado.` / `...: click, sobrevive.` |
+| Estado | `>> Jugadores vivos: X de 3` |
+| Nueva ronda | `----- Ronda R: minimo M bala(s) -----` |
+| Fin | `===== GANADOR: Jugador N =====` / `Nueva partida en 10 segundos...` |
+| Errores | `No es tu turno...`, `Valor invalido. Envia un numero entre M y 6.`, `Estas eliminado; solo puedes observar.`, `La partida aun no inicia (n/3 jugadores).` |
+
+### 9.5 Flujo interno
+
+```
+tcp_server_accept()  → slot libre → player_pcb[slot] = pcb → game_player_joined(slot)
+                                                               └─ si conectados == 3 → start_game()
+tcp_server_recv()    → recorta CR/LF → game_player_input(slot, "3")
+                          ├─ valida estado / turno / rango
+                          ├─ hit = rand_chamber() < balas
+                          ├─ send_to(jugador, "1"/"0") + texto
+                          ├─ broadcast resultado y ">> Jugadores vivos"
+                          ├─ si vivos <= 1 → end_game() → sys_timeout(10 s, restart)
+                          └─ advance_turn() → si dio la vuelta: ronda++ y min = 1 + (ronda-1)/2
+tcp_server_recv(p==NULL) / tcp_server_error() → player_pcb[slot] = NULL → game_player_left(slot)
+```
+
+El generador aleatorio es un LCG sembrado con `sys_now()` y mezclado con el instante de llegada de cada mensaje, para que la secuencia no se repita en cada reinicio.
+
+### 9.6 Prueba sin las MCX (3 PuTTY en la PC)
+
+Abrir tres sesiones PuTTY *Raw* a `10.10.10.102:7`. Cada una recibirá su número de jugador; al conectar la tercera inicia la partida. En la sesión que diga `TU TURNO`, escribir un número y Enter.
+
+Consola de la K64:
+
+```
+ Servidor TCP escuchando en el puerto 7, esperando 3 jugadores
+ Jugador 1 conectado desde 10.10.10.100:51012
+ [JUEGO] Jugador 1 conectado (1/3)
+ ...
+ [JUEGO] Partida iniciada con 3 jugadores
+ [JUEGO] Ronda 1, turno del Jugador 1, minimo 1 bala(s)
+ [Jugador 1] -> 2
+ [JUEGO] Jugador 1 jugo con 2 bala(s): click
+ [JUEGO] >> Jugadores vivos: 3 de 3
+ [JUEGO] Ronda 1, turno del Jugador 2, minimo 1 bala(s)
+```
+
+### 9.7 Parámetros
+
+| Macro | Archivo | Default |
+|-------|---------|---------|
+| `GAME_NUM_PLAYERS` | `roulette_game.h` | `3` |
+| `GAME_CHAMBERS` | `roulette_game.h` | `6` |
+| `GAME_ROUNDS_PER_LEVEL` | `roulette_game.h` | `2` |
+| `GAME_RESTART_DELAY_MS` | `roulette_game.h` | `10000` |
+| `TCP_SERVER_PORT` | `tcp_server.h` | `7` |
+
 

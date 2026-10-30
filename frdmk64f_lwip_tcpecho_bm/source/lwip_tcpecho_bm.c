@@ -158,7 +158,7 @@ int main(void)
     netif_set_up(&netif);
 
     PRINTF("\r\n************************************************\r\n");
-    PRINTF(" FRDM-K64F TCP Server\r\n");
+    PRINTF(" FRDM-K64F - Servidor Ruleta Rusa\r\n");
     PRINTF("************************************************\r\n");
     PRINTF(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&netif_ipaddr)[0], ((u8_t *)&netif_ipaddr)[1],
            ((u8_t *)&netif_ipaddr)[2], ((u8_t *)&netif_ipaddr)[3]);
